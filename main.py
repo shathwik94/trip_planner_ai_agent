@@ -1,8 +1,14 @@
 from datetime import datetime
 from trip_planner.crew import TripPlanner
 from langchain_google_genai import ChatGoogleGenerativeAI
-from browser_use import Agent
+import browser_use
 import asyncio
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 
 def run():
@@ -32,14 +38,26 @@ def run():
         raise Exception(f"An error occurred while running the crew: {e}")
 
 
+browser = browser_use.Browser(
+    config=browser_use.BrowserConfig(
+        chrome_instance_path="C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+    )
+)
+
+# chrome_instance_path="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" # MAC
+# chrome_instance_path = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" # WINDOWS
+# chrome_instance_path = "/usr/bin/google-chrome" # LINUX
+
+
 def get_browser_agent(tasks):
     async def main(tasks):
-        agent = Agent(
+        agent = browser_use.Agent(
             task=tasks,
             llm=ChatGoogleGenerativeAI(
                 model="gemini-2.0-flash",
-                api_key="AIzaSyCnwwbMmbVBk2BnZZtzRGQ6ado8GEl4F7I",
+                api_key=GEMINI_API_KEY,
             ),
+            browser=browser,
         )
         result = await agent.run()
 
@@ -51,6 +69,6 @@ def get_browser_agent(tasks):
 
 if __name__ == "__main__":
     run()
-    with open("output/flights.txt", "r") as file:
+    with open("output/output.txt", "w", encoding="utf-8") as file:
         task = file.read()
     get_browser_agent(task)
