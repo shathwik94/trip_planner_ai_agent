@@ -1,0 +1,7 @@
+crewai
+crewai-tools
+langchain-google-genai
+python-dotenv
+asyncio
+browser-use
+langchain-groq
