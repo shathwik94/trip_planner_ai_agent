@@ -43,7 +43,7 @@ def get_browser_agent(tasks):
         )
         result = await agent.run()
 
-        with open("output.txt", "w") as f:
+        with open("output/output.txt", "w") as f:
             f.write(str(result))
 
     asyncio.run(main(tasks))
@@ -51,6 +51,6 @@ def get_browser_agent(tasks):
 
 if __name__ == "__main__":
     run()
-    with open("flights.txt", "r") as file:
+    with open("output/flights.txt", "r") as file:
         task = file.read()
     get_browser_agent(task)
